@@ -58,7 +58,7 @@ export const notesReducer = (state = initalState, action) => {
 				active: null,
 				// Retornar todas las notas menos la seleccionada
 				notes: state.notes.filter(note =>
-					note.id !== action.payload
+					note._id !== action.payload
 				)
 			}
 		case types.notesLogoutCleaning:

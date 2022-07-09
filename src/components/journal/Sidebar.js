@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { startLogout } from '../../actions/auth'
 import { startNewNote } from '../../actions/notes'
@@ -22,7 +23,12 @@ export const Sidebar = () => {
 		<aside className="journal__sidebar">
 			<div className="journal__sidebar-navbar">
 				<h3 className="mt-5">
-				<i className="fas fa-user"></i>
+				<Link
+					to="/account"
+					className="user"
+				>
+					<i className="fa-solid fa-user-pen"></i>
+				</Link>
 					<span>&nbsp;&nbsp;{name}</span>
 				</h3>
 				<i

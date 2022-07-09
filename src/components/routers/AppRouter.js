@@ -16,6 +16,7 @@ import { JournalScreen } from '../journal/JournalScreen'
 
 import { PublicRoute } from './PublicRoute'
 import { PrivateRoute } from './PrivateRoute'
+import { Account } from '../account/Account'
 
 export const AppRouter = () => {
 
@@ -57,6 +58,12 @@ export const AppRouter = () => {
 							exact
 							path="/"
 							component={JournalScreen}
+							isAutenticated={isLoggedIn}
+						/>
+						<PrivateRoute
+							exact
+							path="/account"
+							component={Account}
 							isAutenticated={isLoggedIn}
 						/>
 						{/* Muy importante */}

@@ -9,7 +9,8 @@ export const NoteScreen = () => {
 
 	const dispatch = useDispatch()
 
-	const {active: note} = useSelector(state => state.notes)
+	const {active: note, notes} = useSelector(state => state.notes)
+	const user = useSelector( state => state.auth)
 	// Custom
 	const [formValues, handleInputChange, reset] = useForm(note)
 	const {title, noteImg, content, _id} = formValues
@@ -24,7 +25,7 @@ export const NoteScreen = () => {
 			reset(note)
 			activeId.current = note._id
 		}
-	}, [note, reset])
+	}, [notes, reset, note, user])
 
 	// Actualizar valores en el state
 	useEffect(() => {
@@ -32,7 +33,19 @@ export const NoteScreen = () => {
 	}, [title, noteImg, content, _id, dispatch])
 
 	const handleDelete = () => {
-		dispatch(startDeleting(_id))
+		let filterNotes = notes.filter(notes => notes._id !== activeId.current);
+		const sendData = {
+			nombre: user.name,
+			correo: user.data.correo,
+			imagen: user.data.imagen,
+			direccion: user.data.direccion,
+			ciudad: user.data.ciudad,
+			pais: user.data.pais,
+			telefono: user.data.telefono,
+			notas: filterNotes,
+			uid: user.uid
+		}
+		dispatch(startDeleting(_id, sendData))
 	}
 
 	return (

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import moment from 'moment'
 import 'moment/locale/es';
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,12 +10,14 @@ export const NotesAppBar = () => {
 	const dispatch = useDispatch()
 
 	// Extraemos del estate la nota activa
-	const {active} = useSelector(state => state.notes)
+	const {active, ...notes} = useSelector(state => state.notes)
 	const user = useSelector( state => state.auth)
+	useEffect(() => {
+	}, [user, active]);
 
 	// const activeDate = moment(active.date)
 	const handleSave = () => {
-		dispatch(startSaveNote(active, user))
+		dispatch(startSaveNote(active, user, notes))
 	}
 
 	const handlePictureClick = () => {

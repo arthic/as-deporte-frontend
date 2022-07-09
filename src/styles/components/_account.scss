@@ -1,0 +1,26 @@
+.account {
+    margin: 0 auto;
+    max-width: 500px;
+    margin-top: 3rem;
+    .link .row{
+        margin-right: 0.5rem;
+    }
+    .img-container {
+        margin: 0 auto;
+        text-align: center;
+        img {
+            max-width: 300px;
+        }
+    }
+    button {
+        display: flex;
+        margin: 0 auto;
+        align-items: center;
+        margin-top: 1rem;
+    }
+    .btn-primary {
+        text-align: center;
+        max-width: 133px;
+        font-size: 18px;
+    }
+}

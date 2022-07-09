@@ -53,5 +53,6 @@ i.fas.fa-clock {
 .notes__image img {
 	box-shadow: 5px 5px 25px  $dark-grey;
 	border-radius: 15px;
-	height: 250px;
+	max-height: 250px;
+	max-width: 500px;
 }

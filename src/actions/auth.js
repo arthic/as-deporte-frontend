@@ -6,7 +6,8 @@ import { types } from "../types/types"
 import { noteLogout } from './notes'
 import { finishLoading, startLoading } from './ui'
 
-const url = 'https://as-deporte33.herokuapp.com'
+// const url = 'https://as-deporte33.herokuapp.com'
+const url = 'http://localhost:8080'
 
 export const startLoginEmailPassword = (email, password) => {
 	/* Prueba de funcion asincrona (Fetch, posteo de archivos,
@@ -58,7 +59,6 @@ export const startRegisterWithEmailPasswordName = (formValues) => {
 			// }
 			return response.json();
 		}).then((response) => {
-			console.log(response);
 			Swal.fire('Saved', 'Registro exitoso', 'success')
 			dispatch(startLoading())
 			// const {uid, nombre, ...data} = formValues
@@ -76,6 +76,13 @@ export const login = (uid, displayName, data) => ({
 	type: types.login,
 	payload: {
 		uid, displayName, data
+	}
+})
+export const updateData = (displayName, data) => ({
+	type: types.updateData,
+	payload: {
+		displayName,
+		data
 	}
 })
 

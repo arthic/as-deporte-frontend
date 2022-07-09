@@ -1,10 +1,12 @@
 // import {db} from '../firebase/firebase-config'
 import { loadNotes } from '../helpers/loadNotes'
 import { types } from '../types/types'
+import { useSelector } from 'react-redux'
 
 import Swal from 'sweetalert2'
 import { fileUpload } from '../helpers/fileUpload'
-const url = 'https://as-deporte33.herokuapp.com'
+// const url = 'https://as-deporte33.herokuapp.com'
+const url = 'http://localhost:8080'
 
 // react-journal
 export const startNewNote = () => {
@@ -14,18 +16,19 @@ export const startNewNote = () => {
 		// const {uid} = getState().auth
 
 		// // Pad que mandaremos a firebase
-		// const newNote = {
-		// 	title: '',
-		// 	body: '',
-		// 	date: new Date().getTime(),
-		// }
+		const newNote = {
+			title: "",
+			content: "",
+			noteImg: "",
+			// _id: ""
+		}
 		// try {
 		// 	// De firebase-config
 		// 	// `` Viene de la estructura que definimos en firebase
 		// 	// Como es una promesa, 'async' al return de la func
 		// 	const doc = await db.collection(`${uid}/journal/notes`).add(newNote)
-		// 	dispatch(activeNote(doc.id, newNote))
-		// 	dispatch(addNewNote(doc.id, newNote))
+			dispatch(activeNote(newNote.title, newNote.noteImg, newNote.content, newNote._id))
+			dispatch(addNewNote("", newNote))
 		// } catch (error) {
 		// 	console.log(error);
 		// }
@@ -43,17 +46,13 @@ export const activeNote = (title, noteImg, content, _id) => ({
 
 export const addNewNote = (id, note) => ({
 	type: types.notesAddNew,
-	payload: {
-		id,
-		...note
-	}
+	payload: note
 })
 
 export const startLoadingNotes = (notas) => {
 	return async (dispatch) => {
-
-		const notes = await loadNotes(notas)
-		dispatch(setNotes(notes))
+		// const notes = await loadNotes(notas)
+		dispatch(setNotes(notas))
 	}
 }
 
@@ -63,10 +62,10 @@ export const setNotes = (notes) => ({
 })
 
 // La nota ya viene con su id
-export const startSaveNote = (active, user) => {
+export const startSaveNote = (active, user, {notes}) => {
 	return async (dispatch, getState) => {
 
-		const newNotas = user.data.notas.map(nota => {
+		const newNotas = notes.map(nota => {
 			let notas = {};
 			if (nota._id === active._id) {
 				notas.title = active.title;
@@ -89,7 +88,6 @@ export const startSaveNote = (active, user) => {
 			telefono: user.data.telefono,
 			notas: newNotas
 		}
-		console.log(sendData);
 		const token = localStorage.getItem('token');
 		fetch(`${url}/api/notes/${user.uid}`, {
 			method: 'PUT',
@@ -105,7 +103,15 @@ export const startSaveNote = (active, user) => {
 			}
 			return response.json();
 		}).then((response) => {
-			console.log(response);
+			const {currentUsuario} = response
+			// let notas = {};
+			// notas.title = active.title;
+			// notas.content = active.content;
+			// notas.noteImg = active.noteImg;
+			// notas._id = active._id;
+			const notaActual = currentUsuario.notas[0]
+			dispatch(startLoadingNotes(currentUsuario.notas))
+			dispatch(activeNote(notaActual.title, notaActual.noteImg, notaActual.content, notaActual._id))
 			Swal.fire('Saved', active.title, 'success')
 		}).catch(e => {
 			console.log(e);
@@ -115,15 +121,16 @@ export const startSaveNote = (active, user) => {
 }
 
 // Actualiza unicamente la nota que cambie, para las tarjetas del sidebar
-export const refreshNote = (id, note) => ({
+export const refreshNote = (title, noteImg, content, _id) => ({
 	type: types.notesUpdated,
 	payload: {
-		id,
-		// Garantizar el key que tenga el id en el componente
-		note: {
-			id,
-			...note
-		}
+		title, noteImg, content, _id
+		// id,
+		// // Garantizar el key que tenga el id en el componente
+		// note: {
+		// 	id,
+		// 	...note
+		// }
 	}
 })
 
@@ -140,12 +147,13 @@ export const startUploading = (file) => {
 			}
 		})
 
-		const {active: activeNote} = getState().notes
+		const {active: activeNote, ...notes} = getState().notes
+		const user = getState().auth
 		const fileUrl = await fileUpload(file)
 
-		// Actualizar URL
-		activeNote.url = fileUrl
-		dispatch(startSaveNote(activeNote))
+		// // Actualizar URL
+		activeNote.noteImg = fileUrl
+		dispatch(startSaveNote(activeNote, user, notes))
 
 		// Despues del await
 		Swal.close()
@@ -153,14 +161,37 @@ export const startUploading = (file) => {
 }
 
 // Borrar notas de firebase
-export const startDeleting = (id) => {
+export const startDeleting = (id, sendData) => {
 	return async (dispatch, getState) => {
 
-		// const uid = getState().auth.uid
-		// await db.doc(`${uid}/journal/notes/${id}`).delete()
-
-		// // Borrado del store
-		// dispatch(deleteNote(id))
+		const token = localStorage.getItem('token');
+		fetch(`${url}/api/notes/${sendData.uid}`, {
+			method: 'PUT',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				'x-token': token
+			},
+			body: JSON.stringify(sendData),
+		}).then((response) => {
+			if (!response.status === 201) {
+				Swal.fire('Error', 'Algo salio mal! :(' , 'error')
+			}
+			return response.json();
+		}).then((response) => {
+			const {currentUsuario} = response
+			// let notas = {};
+			// notas.title = active.title;
+			// notas.content = active.content;
+			// notas.noteImg = active.noteImg;
+			// notas._id = active._id;
+			dispatch(startLoadingNotes(currentUsuario.notas))
+			Swal.fire('Saved', 'Borrado exitoso', 'success')
+		}).catch(e => {
+			console.log(e);
+			Swal.fire('Error', 'Uno de los campos es incorrecto' , 'error')
+		})
+		dispatch(deleteNote(id))
 
 	}
 }

@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { JournalEntry } from './JournalEntry'
 
 export const JournalEntries = () => {
 
 	const {notes} = useSelector(state => state.notes)
+
+	useEffect(() => {
+	}, [notes]);
 
 	return (
 		<div
