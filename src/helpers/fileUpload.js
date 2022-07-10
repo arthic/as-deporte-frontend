@@ -14,10 +14,8 @@ export const fileUpload = async (file) => {
 		})
 		if (resp.ok) {
 			const cloudResp = await resp.json()
-			// URL don esta nuestra img
 			return cloudResp.secure_url
 		} else {
-			// throw await resp.json()
 			return null
 		}
 	} catch (err) {

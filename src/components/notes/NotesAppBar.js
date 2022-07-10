@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react'
-import moment from 'moment'
-import 'moment/locale/es';
 import { useDispatch, useSelector } from 'react-redux'
 import { startSaveNote, startUploading } from '../../actions/notes'
-moment.locale('es');
 
 export const NotesAppBar = () => {
 
@@ -33,13 +30,6 @@ export const NotesAppBar = () => {
 
 	return (
 		<div className="notes__appbar">
-			{/* <span>
-				<i className="far fa-calendar-alt"></i>
-				&nbsp;&nbsp;{activeDate.format('L')}
-				&nbsp;&nbsp;
-				<i className="fas fa-clock"></i>
-				&nbsp;&nbsp;{activeDate.format('LT')}
-			</span> */}
 			<input
 				type="file"
 				id="fileSelector"

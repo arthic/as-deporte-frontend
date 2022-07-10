@@ -41,7 +41,6 @@ export const Sidebar = () => {
 				className="journal__new-entry"
 				onClick={handleAddNew}
 			>
-				{/* <i className="far fa-calendar-plus fa-5x"></i> */}
 				<i className="fas fa-sticky-note fa-5x"></i>
 				<p className="mt-5">
 					Crear Nota

@@ -1,13 +1,9 @@
 import Swal from 'sweetalert2'
-
-// import {googleAuthProvider} from '../firebase/firebase-config'
-// import firebase from '../firebase/firebase-config'
+import { url } from '../helpers/getAPI'
 import { types } from "../types/types"
 import { noteLogout } from './notes'
 import { finishLoading, startLoading } from './ui'
 
-// const url = 'https://as-deporte33.herokuapp.com'
-const url = 'http://localhost:8080'
 
 export const startLoginEmailPassword = (email, password) => {
 	/* Prueba de funcion asincrona (Fetch, posteo de archivos,
@@ -54,17 +50,15 @@ export const startRegisterWithEmailPasswordName = (formValues) => {
 			},
 			body: JSON.stringify(formValues),
 		}).then((response) => {
-			// if (!response.status === 200) {
-			// 	Swal.fire('Error', 'Algo salio mal! :(' , 'error')
-			// }
+			if (!response.status === 200) {
+				Swal.fire('Error', 'Algo salio mal! :(' , 'error')
+			}
 			return response.json();
 		}).then((response) => {
 			Swal.fire('Saved', 'Registro exitoso', 'success')
-			dispatch(startLoading())
-			// const {uid, nombre, ...data} = formValues
-			const {usuario, ...data} = response
-			dispatch(login(usuario.uid, usuario.nombre, data))
-			dispatch(finishLoading())
+			setTimeout(() => {
+				window.location.href = '/auth/login'
+			}, 1500);
 		}).catch(e => {
 			console.log(e);
 			Swal.fire('Error', 'Uno de los campos es incorrecto' , 'error')
@@ -89,11 +83,6 @@ export const updateData = (displayName, data) => ({
 // Asincrono
 export const startLogout = () => {
 	return async (dispatch) => {
-		// await firebase.auth().signOut()
-
-		/*Mandamos la accion logout que viene en definida abajo
-		la cual manda el despacho al state, en el cual el authREducer
-		se encarga de recetear los valores de la autenticación */
 		dispatch(logout())
 		dispatch(noteLogout())
 	}

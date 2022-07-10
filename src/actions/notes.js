@@ -1,37 +1,19 @@
-// import {db} from '../firebase/firebase-config'
-import { loadNotes } from '../helpers/loadNotes'
 import { types } from '../types/types'
-import { useSelector } from 'react-redux'
 
 import Swal from 'sweetalert2'
 import { fileUpload } from '../helpers/fileUpload'
-// const url = 'https://as-deporte33.herokuapp.com'
-const url = 'http://localhost:8080'
+import { url } from '../helpers/getAPI'
 
 // react-journal
 export const startNewNote = () => {
-	// Como es func asyncrono, usamos un callback
-	// El 2° argumetno es un func para obtener el state
 	return async (dispatch, getState) => {
-		// const {uid} = getState().auth
-
-		// // Pad que mandaremos a firebase
 		const newNote = {
 			title: "",
 			content: "",
 			noteImg: "",
-			// _id: ""
 		}
-		// try {
-		// 	// De firebase-config
-		// 	// `` Viene de la estructura que definimos en firebase
-		// 	// Como es una promesa, 'async' al return de la func
-		// 	const doc = await db.collection(`${uid}/journal/notes`).add(newNote)
-			dispatch(activeNote(newNote.title, newNote.noteImg, newNote.content, newNote._id))
-			dispatch(addNewNote("", newNote))
-		// } catch (error) {
-		// 	console.log(error);
-		// }
+		dispatch(activeNote(newNote.title, newNote.noteImg, newNote.content, newNote._id))
+		dispatch(addNewNote("", newNote))
 	}
 }
 
@@ -39,7 +21,6 @@ export const startNewNote = () => {
 export const activeNote = (title, noteImg, content, _id) => ({
 	type: types.notesActive,
 	payload: {
-		// ... toda la infromación en el mismo objeto
 		title, noteImg, content, _id
 	}
 })
@@ -51,7 +32,6 @@ export const addNewNote = (id, note) => ({
 
 export const startLoadingNotes = (notas) => {
 	return async (dispatch) => {
-		// const notes = await loadNotes(notas)
 		dispatch(setNotes(notas))
 	}
 }
@@ -104,11 +84,6 @@ export const startSaveNote = (active, user, {notes}) => {
 			return response.json();
 		}).then((response) => {
 			const {currentUsuario} = response
-			// let notas = {};
-			// notas.title = active.title;
-			// notas.content = active.content;
-			// notas.noteImg = active.noteImg;
-			// notas._id = active._id;
 			const notaActual = currentUsuario.notas[0]
 			dispatch(startLoadingNotes(currentUsuario.notas))
 			dispatch(activeNote(notaActual.title, notaActual.noteImg, notaActual.content, notaActual._id))
@@ -125,12 +100,6 @@ export const refreshNote = (title, noteImg, content, _id) => ({
 	type: types.notesUpdated,
 	payload: {
 		title, noteImg, content, _id
-		// id,
-		// // Garantizar el key que tenga el id en el componente
-		// note: {
-		// 	id,
-		// 	...note
-		// }
 	}
 })
 
@@ -180,11 +149,6 @@ export const startDeleting = (id, sendData) => {
 			return response.json();
 		}).then((response) => {
 			const {currentUsuario} = response
-			// let notas = {};
-			// notas.title = active.title;
-			// notas.content = active.content;
-			// notas.noteImg = active.noteImg;
-			// notas._id = active._id;
 			dispatch(startLoadingNotes(currentUsuario.notas))
 			Swal.fire('Saved', 'Borrado exitoso', 'success')
 		}).catch(e => {

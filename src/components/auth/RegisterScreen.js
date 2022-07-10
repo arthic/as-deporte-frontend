@@ -2,44 +2,28 @@ import React from 'react'
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux'
 
+
 import { useForm } from '../../hooks/useForm';
 import validator from 'validator'
 import { removeError, setError } from '../../actions/ui';
 import { startRegisterWithEmailPasswordName } from '../../actions/auth';
 
 export const RegisterScreen = () => {
-	/*
-		{
-			name: 'Aaron',
-			email: 'aaron.lls.dev@gmail.com',
-			password: '12345',
-			password2: '12345'
-		}
-
-		// useForm
-
-		const handleRegistrer = (e) {
-			console.log(name, email,password, password2)
-		}
-
-	*/
 	// React-Redux
 	const dispatch = useDispatch()
 	// Dispara un callback que trae el state
 	// Del state extraigo el ui
 	const {msgError} = useSelector( state => state.ui)
 
-	// console.log(msgError);
-
 	const [formValues, handleInputChange] = useForm({
-		nombre: "Arthic",
-		correo: "arthic@gmail.com",
-		password: "33112233",
+		nombre: "",
+		correo: "",
+		password: "",
 		imagen: "",
-		direccion: "Tepocatl 33",
-		ciudad: "Ciudad de México",
-		pais: "México",
-		telefono: "5525151137",
+		direccion: "",
+		ciudad: "",
+		pais: "",
+		telefono: "",
 		notas: []
 	})
 
@@ -52,6 +36,7 @@ export const RegisterScreen = () => {
 		e.preventDefault()
 		// console.log(name, email,password, password2)
 		if(isFormValid()) {
+			console.log(formValues);
 			dispatch(startRegisterWithEmailPasswordName(formValues))
 			// console.log('Formulario correcto');
 		}

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {Link} from 'react-router-dom'
 import { useForm } from '../../hooks/useForm'
 import Swal from 'sweetalert2'
-import { removeError, setError, startLoading, finishLoading} from '../../actions/ui';
+import { removeError, setError } from '../../actions/ui';
 import { updateData } from '../../actions/auth';
 import { startLoadingNotes } from '../../actions/notes';
 import validator from 'validator'
@@ -41,10 +41,8 @@ export const Account = () => {
             }).then((response) => {
                 const {currentUsuario} = response
                 const {uid, nombre, ...data} = currentUsuario
-                // dispatch(startLoading())
                 dispatch(updateData( nombre, data))
                 dispatch(startLoadingNotes(currentUsuario.notas))
-                // dispatch(finishLoading())
                 Swal.fire('Saved', 'LISTO!!! :)', 'success')
             }).catch(e => {
                 console.log(e);
@@ -56,6 +54,9 @@ export const Account = () => {
     const isFormValid = () => {
 		if(name.trim().length === 0 ) {
 			dispatch(setError('Name is required'))
+			return false
+		} else if (!validator.isEmail(correo)) {
+			dispatch(setError('Email is not valid'))
 			return false
 		}
 		dispatch(removeError())

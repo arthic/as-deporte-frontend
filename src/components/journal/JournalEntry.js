@@ -8,8 +8,6 @@ export const JournalEntry = ({title, noteImg, content, _id}) => {
 	// React-Redux
 	const dispatch = useDispatch()
 
-	// const noteDate = moment(date)
-
 	const handleEntryClick = () => {
 		dispatch(
 			activeNote(title, noteImg, content, _id)
@@ -21,7 +19,6 @@ export const JournalEntry = ({title, noteImg, content, _id}) => {
 			className="journal__entry pointer animate__animated animate__fadeIn animate__faster"
 			onClick={handleEntryClick}
 		>
-
 			{
 				noteImg &&
 				<div
@@ -42,11 +39,6 @@ export const JournalEntry = ({title, noteImg, content, _id}) => {
 					{content}
 				</p>
 			</div>
-
-			{/* <div className="journal__entry-date-box">
-				<span>{noteDate.format('dddd')}</span>
-				<h4>{noteDate.format('Do')}</h4>
-			</div> */}
 		</div>
 	)
 }

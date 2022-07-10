@@ -1,16 +1,5 @@
 import { types } from '../types/types'
-/*
-	{
-		notes: [],
-		active: {
-			id: 'ADFAFASDFASDFASF',
-			title: '',
-			baody: '',
-			imageUrl: '',
-			date: 12345489
-		}
-	}
-*/
+
 // Donde se maneja el active
 const initalState = {
 	notes: [],
